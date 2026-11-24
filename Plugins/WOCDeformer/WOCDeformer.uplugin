@@ -1,0 +1,28 @@
+{
+	"FileVersion": 3,
+	"Version": 2,
+	"VersionName": "1.1.1",
+	"FriendlyName": "WOC Deformer",
+	"Description": "LOD-aware ONNX-based WOC deformation inference animation beluprint extention using Deformer Graph integration.",
+	"Category": "Animation",
+	"CreatedBy": "",
+	"CanContainContent": true,
+	"IsBetaVersion": true,
+	"Installed": false,
+	"Modules": [
+		{
+			"Name": "WOCDeformer",
+			"Type": "Runtime",
+			"LoadingPhase": "Default"
+		},
+		{
+			"Name": "WOCDeformerEditor",
+			"Type": "UncookedOnly",
+			"LoadingPhase": "Default"
+		}
+	],
+	"Plugins": [
+	{ "Name": "DeformerGraph",       "Enabled": true },
+	{ "Name": "NNERuntimeORT",       "Enabled": true }
+]
+}

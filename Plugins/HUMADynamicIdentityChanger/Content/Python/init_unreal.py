@@ -1,0 +1,3 @@
+import huma_identity_authoring
+
+huma_identity_authoring.register_menu()

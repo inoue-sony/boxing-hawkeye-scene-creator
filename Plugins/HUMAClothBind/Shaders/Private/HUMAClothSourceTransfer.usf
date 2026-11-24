@@ -1,0 +1,26 @@
+#include "/Engine/Public/Platform.ush"
+
+uint Count;
+Buffer<float> SourcePositions;
+StructuredBuffer<int3> SourceTriangles;
+StructuredBuffer<float3> Barycentrics;
+RWBuffer<float> BodyPositions;
+
+float3 SourceVertex(uint Index)
+{
+    uint Offset = Index * 3;
+    return float3(SourcePositions[Offset], SourcePositions[Offset + 1], SourcePositions[Offset + 2]);
+}
+
+[numthreads(256, 1, 1)]
+void GatherSourceLODCS(uint3 DispatchThreadId : SV_DispatchThreadID)
+{
+    uint Index = DispatchThreadId.x;
+    if (Index >= Count) return;
+    int3 Triangle = SourceTriangles[Index];
+    float3 Weights = Barycentrics[Index];
+    float3 Position = SourceVertex(Triangle.x) * Weights.x + SourceVertex(Triangle.y) * Weights.y + SourceVertex(Triangle.z) * Weights.z;
+    BodyPositions[Index * 3] = Position.x;
+    BodyPositions[Index * 3 + 1] = Position.y;
+    BodyPositions[Index * 3 + 2] = Position.z;
+}

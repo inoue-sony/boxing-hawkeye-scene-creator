@@ -1,0 +1,19 @@
+{
+	"FileVersion": 3,
+	"Version": 1,
+	"VersionName": "0.1.0",
+	"FriendlyName": "HUMA Live Hawk-Eye",
+	"Description": "Hawk-Eye のフレーム BSON を順に読み、npb_huma_ik の因果 IK（ik_huma_causal_w9.onnx、NNE）で毎フレーム HUMA の姿勢を作って、HUMA ランタイム再生の選手に当てる。体型は事前に作ったデータセットのものを使う。",
+	"Category": "Animation",
+	"CanContainContent": false,
+	"IsBetaVersion": true,
+	"EnabledByDefault": true,
+	"Modules": [
+		{ "Name": "HUMALiveHawkEye", "Type": "Runtime", "LoadingPhase": "Default" }
+	],
+	"Plugins": [
+		{ "Name": "HUMADynamicIdentityChanger", "Enabled": true },
+		{ "Name": "NNERuntimeORT", "Enabled": true },
+		{ "Name": "ProceduralMeshComponent", "Enabled": true }
+	]
+}

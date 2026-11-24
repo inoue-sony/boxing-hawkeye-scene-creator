@@ -1,0 +1,151 @@
+#include "/Engine/Public/Platform.ush"
+
+uint BodyCount;
+uint AnchorCount;
+uint ClothCount;
+uint Slots;
+Buffer<float> BodyPositions;
+StructuredBuffer<uint> Mapping;
+StructuredBuffer<uint> Quads;
+StructuredBuffer<uint> BodyOffsets;
+StructuredBuffer<uint> BodyIncidents;
+StructuredBuffer<uint> AnchorTriangles;
+StructuredBuffer<float3> Bary;
+StructuredBuffer<float3> Rest;
+StructuredBuffer<float3> RestPosition;
+StructuredBuffer<float3> RestTangent;
+StructuredBuffer<float3> RestBitangent;
+StructuredBuffer<float3> RestNormal;
+StructuredBuffer<uint> InfluenceAnchors;
+StructuredBuffer<float> InfluenceWeights;
+StructuredBuffer<uint> Triangles;
+StructuredBuffer<uint> ClothOffsets;
+StructuredBuffer<uint> ClothIncidents;
+StructuredBuffer<float2> UV;
+StructuredBuffer<float3> BodyNormals;
+StructuredBuffer<float3> Anchors;
+Buffer<float> Positions;
+Buffer<float> PreviousPositions;
+RWStructuredBuffer<float3> OutBodyNormals;
+RWStructuredBuffer<float3> OutAnchors;
+RWBuffer<float> OutPositions;
+RWBuffer<uint> OutTangents;
+RWStructuredBuffer<float3> OutValidation;
+
+float3 SafeNormal(float3 Value, float3 Fallback)
+{
+    float LengthSquared = dot(Value, Value);
+    return LengthSquared > 1e-16 ? Value * rsqrt(max(LengthSquared, 1e-30)) : Fallback;
+}
+
+float3 BodyVertex(uint Vertex)
+{
+    uint Offset = Mapping[Vertex] * 3;
+    return float3(BodyPositions[Offset], BodyPositions[Offset + 1], BodyPositions[Offset + 2]);
+}
+
+float3 ClothVertex(uint Vertex)
+{
+    uint Offset = Vertex * 3;
+    return float3(Positions[Offset], Positions[Offset + 1], Positions[Offset + 2]);
+}
+
+uint PackNormal(float3 Normal, float Sign)
+{
+    int4 Packed = int4(round(clamp(float4(Normal, Sign), -1, 1) * 127));
+    return (uint(Packed.x) & 255) | ((uint(Packed.y) & 255) << 8) | ((uint(Packed.z) & 255) << 16) | ((uint(Packed.w) & 255) << 24);
+}
+
+[numthreads(256, 1, 1)]
+void SoftBindCS(uint3 DispatchThreadId : SV_DispatchThreadID)
+{
+    uint Vertex = DispatchThreadId.x;
+#if HUMA_PASS == 0
+    if (Vertex >= BodyCount) return;
+    float3 Normal = 0;
+    for (uint Incident = BodyOffsets[Vertex]; Incident < BodyOffsets[Vertex + 1]; ++Incident)
+    {
+        uint Offset = BodyIncidents[Incident] * 4;
+        float3 First = BodyVertex(Quads[Offset]);
+        float3 Second = BodyVertex(Quads[Offset + 1]);
+        float3 Third = BodyVertex(Quads[Offset + 2]);
+        float3 Fourth = BodyVertex(Quads[Offset + 3]);
+        Normal += cross(Third - First, Fourth - Second);
+    }
+    OutBodyNormals[Vertex] = SafeNormal(Normal, float3(0, 0, 1));
+#elif HUMA_PASS == 1
+    if (Vertex >= AnchorCount) return;
+    uint FirstId = AnchorTriangles[Vertex * 3];
+    uint SecondId = AnchorTriangles[Vertex * 3 + 1];
+    uint ThirdId = AnchorTriangles[Vertex * 3 + 2];
+    float3 First = BodyVertex(FirstId);
+    float3 Second = BodyVertex(SecondId);
+    float3 Third = BodyVertex(ThirdId);
+    float3 Weight = Bary[Vertex];
+    float3 Normal = SafeNormal(BodyNormals[FirstId] * Weight.x + BodyNormals[SecondId] * Weight.y + BodyNormals[ThirdId] * Weight.z, float3(0, 0, 1));
+    float3 Tangent = Second - First;
+    Tangent -= dot(Tangent, Normal) * Normal;
+    if (dot(Tangent, Tangent) <= 1e-16)
+    {
+        Tangent = Third - First;
+        Tangent -= dot(Tangent, Normal) * Normal;
+    }
+    if (dot(Tangent, Tangent) <= 1e-16) Tangent = cross(Normal, abs(Normal.z) > 0.8 ? float3(1, 0, 0) : float3(0, 1, 0));
+    Tangent = SafeNormal(Tangent, float3(1, 0, 0));
+    float3 Bitangent = SafeNormal(cross(Normal, Tangent), float3(0, 1, 0));
+    Tangent = SafeNormal(cross(Bitangent, Normal), Tangent);
+    OutAnchors[Vertex * 4] = First * Weight.x + Second * Weight.y + Third * Weight.z;
+    OutAnchors[Vertex * 4 + 1] = Tangent;
+    OutAnchors[Vertex * 4 + 2] = Bitangent;
+    OutAnchors[Vertex * 4 + 3] = Normal;
+#elif HUMA_PASS == 2
+    if (Vertex >= ClothCount) return;
+    float3 Result = 0;
+    for (uint Slot = 0; Slot < Slots; ++Slot)
+    {
+        uint Influence = Vertex * Slots + Slot;
+        float Weight = InfluenceWeights[Influence];
+        if (Weight <= 0) continue;
+        uint Anchor = InfluenceAnchors[Influence];
+        float3 Relative = Rest[Vertex] - RestPosition[Anchor];
+        Result += Weight * (Anchors[Anchor * 4] + Anchors[Anchor * 4 + 1] * dot(Relative, RestTangent[Anchor]) +
+            Anchors[Anchor * 4 + 2] * dot(Relative, RestBitangent[Anchor]) + Anchors[Anchor * 4 + 3] * dot(Relative, RestNormal[Anchor]));
+    }
+    OutPositions[Vertex * 3] = Result.x;
+    OutPositions[Vertex * 3 + 1] = Result.y;
+    OutPositions[Vertex * 3 + 2] = Result.z;
+#elif HUMA_PASS == 3
+    if (Vertex >= ClothCount) return;
+    float3 Normal = 0, Tangent = 0, Bitangent = 0;
+    for (uint Incident = ClothOffsets[Vertex]; Incident < ClothOffsets[Vertex + 1]; ++Incident)
+    {
+        uint Offset = ClothIncidents[Incident] * 3;
+        uint FirstId = Triangles[Offset], SecondId = Triangles[Offset + 1], ThirdId = Triangles[Offset + 2];
+        float3 EdgeFirst = ClothVertex(SecondId) - ClothVertex(FirstId);
+        float3 EdgeSecond = ClothVertex(ThirdId) - ClothVertex(FirstId);
+        float2 UVFirst = UV[SecondId] - UV[FirstId];
+        float2 UVSecond = UV[ThirdId] - UV[FirstId];
+        Normal += cross(EdgeSecond, EdgeFirst);
+        float Determinant = UVFirst.x * UVSecond.y - UVFirst.y * UVSecond.x;
+        if (abs(Determinant) > 1e-12)
+        {
+            Tangent += (EdgeFirst * UVSecond.y - EdgeSecond * UVFirst.y) / Determinant;
+            Bitangent += (EdgeSecond * UVFirst.x - EdgeFirst * UVSecond.x) / Determinant;
+        }
+    }
+    Normal = SafeNormal(Normal, float3(0, 0, 1));
+    Tangent = SafeNormal(Tangent - Normal * dot(Tangent, Normal), abs(Normal.z) > 0.8 ? float3(1, 0, 0) : SafeNormal(cross(Normal, float3(0, 0, 1)), float3(1, 0, 0)));
+    float Sign = dot(cross(Normal, Tangent), Bitangent) < 0 ? -1 : 1;
+    OutTangents[Vertex * 2] = PackNormal(Tangent, 1);
+    OutTangents[Vertex * 2 + 1] = PackNormal(Normal, Sign);
+#else
+    if (Vertex >= BodyCount + ClothCount * 2) return;
+    if (Vertex < BodyCount) OutValidation[Vertex] = BodyVertex(Vertex);
+    else if (Vertex < BodyCount + ClothCount) OutValidation[Vertex] = ClothVertex(Vertex - BodyCount);
+    else
+    {
+        uint Offset = (Vertex - BodyCount - ClothCount) * 3;
+        OutValidation[Vertex] = float3(PreviousPositions[Offset], PreviousPositions[Offset + 1], PreviousPositions[Offset + 2]);
+    }
+#endif
+}

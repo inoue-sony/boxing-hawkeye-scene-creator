@@ -1,0 +1,51 @@
+{
+	"FileVersion": 3,
+	"EngineAssociation": "5.8",
+	"Category": "",
+	"Description": "Boxing Hawk-Eye scene viewer/creator (HUMA runtime playback + technique annotations)",
+	"Plugins": [
+		{
+			"Name": "ModelingToolsEditorMode",
+			"Enabled": true,
+			"TargetAllowList": [
+				"Editor"
+			]
+		},
+		{
+			"Name": "ModelContextProtocol",
+			"Enabled": true
+		},
+		{
+			"Name": "EditorToolset",
+			"Enabled": true
+		},
+		{
+			"Name": "AllToolsets",
+			"Enabled": true
+		},
+		{
+			"Name": "HUMADynamicIdentityChanger",
+			"Enabled": true
+		},
+		{
+			"Name": "HUMALiveHawkEye",
+			"Enabled": true
+		},
+		{
+			"Name": "HUMAClothBind",
+			"Enabled": true
+		},
+		{
+			"Name": "WOCDeformer",
+			"Enabled": true
+		},
+		{
+			"Name": "BaseballHawkEyeSceneCreator",
+			"Enabled": true
+		},
+		{
+			"Name": "MovieRenderPipeline",
+			"Enabled": true
+		}
+	]
+}

@@ -1,0 +1,14 @@
+#include "/Engine/Public/Platform.ush"
+
+uint VertexCount;
+Buffer<float> DeformedPositions;
+RWStructuredBuffer<float3> OutPositions;
+
+[numthreads(256, 1, 1)]
+void CopyPositionsCS(uint3 DispatchThreadId : SV_DispatchThreadID)
+{
+    uint Vertex = DispatchThreadId.x;
+    if (Vertex >= VertexCount) return;
+    uint Offset = Vertex * 3;
+    OutPositions[Vertex] = float3(DeformedPositions[Offset], DeformedPositions[Offset + 1], DeformedPositions[Offset + 2]);
+}

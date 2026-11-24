@@ -1,0 +1,10 @@
+{
+	"FileVersion": 3,
+	"Version": 1,
+	"VersionName": "UniformResources",
+	"FriendlyName": "Baseball Uniform Resources",
+	"Description": "Content-only subset of the original baseball sample's uniform materials, textures and color collection. No scene-creator code is included.",
+	"Category": "Content",
+	"CanContainContent": true,
+	"EnabledByDefault": true
+}

@@ -1,0 +1,58 @@
+{
+  "schema": "huma.runtime.dataset",
+  "schema_version": 1,
+  "model_id": "HUMA_FULLBODY_v1.0.0_MALE_LOD0",
+  "skeleton": "skeleton.json",
+  "skeleton_id": "sha256:df788da28b115db403ba6e842f1b5d87c7a04eea916c652642bb196f2cd65f36",
+  "beta_layout": "beta_layout.json",
+  "beta_layout_id": "sha256:6be434d52061eee5a1b3bff6ab5ca7a06c68dc31631b007c1669c51710aafffe",
+  "track_count": 3,
+  "frame_rates_fps": [
+    50.0
+  ],
+  "timeline_origin": "Hawk-Eye F9_frame51400_30s (Benn vs Prograis, 30 s); first Hawk-Eye frame time 829257354533138 us; resampled to 50.0 fps; neck/head from Hawk-Eye head keypoints; boxer betas",
+  "tracks": [
+    {
+      "track_id": 5423,
+      "player_id": 5423,
+      "team_id": 2,
+      "jersey_number": 0,
+      "role_id": 3,
+      "identity": "track_5423/identity.json",
+      "motion": "track_5423/motion.json",
+      "fps": 50.0,
+      "frame_count": 1499,
+      "start_time_seconds": 0.0,
+      "end_time_seconds_exclusive": 29.98,
+      "payload_bytes": 1624916
+    },
+    {
+      "track_id": 5495,
+      "player_id": 5495,
+      "team_id": 28,
+      "jersey_number": 2,
+      "role_id": 1,
+      "identity": "track_5495/identity.json",
+      "motion": "track_5495/motion.json",
+      "fps": 50.0,
+      "frame_count": 1499,
+      "start_time_seconds": 0.0,
+      "end_time_seconds_exclusive": 29.98,
+      "payload_bytes": 1624916
+    },
+    {
+      "track_id": 5519,
+      "player_id": 5519,
+      "team_id": 30,
+      "jersey_number": 1,
+      "role_id": 1,
+      "identity": "track_5519/identity.json",
+      "motion": "track_5519/motion.json",
+      "fps": 50.0,
+      "frame_count": 1499,
+      "start_time_seconds": 0.0,
+      "end_time_seconds_exclusive": 29.98,
+      "payload_bytes": 1624916
+    }
+  ]
+}

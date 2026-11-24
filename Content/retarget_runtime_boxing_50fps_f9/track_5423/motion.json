@@ -1,0 +1,106 @@
+{
+  "schema": "huma.runtime.motion",
+  "schema_version": 1,
+  "model_id": "HUMA_FULLBODY_v1.0.0_MALE_LOD0",
+  "track": {
+    "track_id": 5423,
+    "player_id": 5423,
+    "team_id": 2,
+    "jersey_number": 0,
+    "role_id": 3
+  },
+  "skeleton_id": "sha256:df788da28b115db403ba6e842f1b5d87c7a04eea916c652642bb196f2cd65f36",
+  "joint_count": 67,
+  "timing": {
+    "fps": 50.0,
+    "frame_count": 1499,
+    "start_time_seconds": 0.0,
+    "sample_interval_seconds": 0.02,
+    "last_sample_time_seconds": 29.96,
+    "end_time_seconds_exclusive": 29.98,
+    "valid_frame_ranges": [
+      [
+        0,
+        1499
+      ]
+    ],
+    "range_convention": "zero-based [start, end), indices into dense payload"
+  },
+  "payload": {
+    "file": "motion.bin",
+    "dtype": "float32",
+    "byte_order": "little",
+    "data_offset_bytes": 0,
+    "frame_stride_bytes": 1084,
+    "rotation_offset_bytes": 0,
+    "hip_displacement_offset_bytes": 1072,
+    "byte_length": 1624916,
+    "sha256": "a6a45c0d52961ae135268de6e82fb9ccbbfce9f7aa4e5179a5328858f400eaf7"
+  },
+  "hip_translation_semantics": "offset added to beta-shaped hip rest position",
+  "root_origin": "source global placement retained; not rebased to first frame",
+  "interpolation": {
+    "rotations": "shortest-path quaternion slerp",
+    "hip_displacement": "linear",
+    "gaps": "do not interpolate across valid_frame_ranges; visibility is caller policy"
+  },
+  "source": {
+    "file": "Hawk-Eye BSON trackId 5423 via npb_huma_ik 1.0.0",
+    "pose": "HUMA parent-local rotation matrices (model Y-up)",
+    "trans": "npb root_m field Z-up m",
+    "hawkeye_team_id": 2,
+    "hawkeye_role_id": 3,
+    "resampled_fps": 50.0,
+    "beta_info": {
+      "beta_l2": 20.62638511609823,
+      "bmi": null,
+      "bmi_default_used": true,
+      "bone_lengths_cm": [
+        30.123455047607422,
+        23.186635971069336,
+        30.07655906677246,
+        23.186357498168945,
+        41.22014617919922,
+        42.91956329345703,
+        21.15256118774414,
+        41.56360626220703,
+        42.91946792602539,
+        21.152677536010742,
+        19.89360809326172,
+        19.817834854125977,
+        57.56993103027344,
+        57.17594909667969,
+        39.201751708984375,
+        22.3856201171875
+      ],
+      "cache": null,
+      "calibration_frames": 100,
+      "estimator": "bone-ratio-height-bmi-linear",
+      "height_cm": null,
+      "height_from_bones_cm": 179.5,
+      "height_source": "contact",
+      "height_used_cm": 180.0,
+      "play_bone_lengths_cm": [
+        30.123455047607422,
+        23.186635971069336,
+        30.07655906677246,
+        23.186357498168945,
+        41.22014617919922,
+        42.91956329345703,
+        21.15256118774414,
+        41.56360626220703,
+        42.91946792602539,
+        21.152677536010742,
+        19.89360809326172,
+        19.817834854125977,
+        57.56993103027344,
+        57.17594909667969,
+        39.201751708984375,
+        22.3856201171875
+      ],
+      "play_contact_height_cm": 180.0,
+      "weight_kg": null
+    },
+    "postprocess": "neck/head from Hawk-Eye head keypoints; betas from boxers dataset"
+  }
+}

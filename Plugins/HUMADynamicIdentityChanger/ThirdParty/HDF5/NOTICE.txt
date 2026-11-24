@@ -1,0 +1,26 @@
+HDF5 1.14.4, Editor-only Windows x64 dependency
+
+Source: https://github.com/HDFGroup/hdf5, tag hdf5_1.14.4
+Commit: 88429b015e29c59de604b0f552001fb7cb7ed5d0
+Licenses: COPYING and COPYING_LBNL_HDF5 in this directory.
+
+The supplied hdf5.dll and import library were built from this upstream source
+with MSVC x64 Release, BUILD_SHARED_LIBS=ON, HDF5_ENABLE_Z_LIB_SUPPORT=ON,
+HDF5_ENABLE_SZIP_SUPPORT=OFF, and tools/examples/tests/HL/CPP/Fortran disabled.
+No SZIP implementation is included. This replaces the initially evaluated
+reference-project binary whose optional compression provenance was not assumed.
+
+The DLL statically links zlib 1.3.1:
+Source: https://github.com/madler/zlib, tag v1.3.1
+Commit: 51b7f2abdade71cd9bb0e7a373ef2610ec6f9daf
+License: LICENSE-zlib in this directory.
+
+BUILD-INFO.json records the binary SHA256 and verified gzip/SZIP availability.
+HUMA's four imported datasets use gzip; they do not require SZIP.
+HDF5 itself retains other standard built-in filters.
+The importer reads files read-only and does not create H5 datasets.
+
+Public headers are from HDF5 1.14.4; H5pubconf.h matches this no-SZIP build.
+No HighFive wrapper, numpy, h5py, model H5 or model-derived arrays are bundled
+in this third-party library directory. The authorized model is selected by
+the user at import time. HDF5 is used only by the UncookedOnly Editor module.

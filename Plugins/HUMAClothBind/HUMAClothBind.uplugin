@@ -1,0 +1,18 @@
+{
+  "FileVersion": 3,
+  "Version": 13,
+  "VersionName": "0.6.4",
+  "FriendlyName": "HUMA Cloth Bind",
+  "Description": "Asset-only single and batch Bind editors with dynamic GPU garments.",
+  "Category": "HUMA",
+  "CanContainContent": true,
+  "EnabledByDefault": true,
+  "Modules": [
+    {"Name": "HUMAClothBind", "Type": "Runtime", "LoadingPhase": "PostConfigInit"},
+    {"Name": "HUMAClothBindEditor", "Type": "Editor", "LoadingPhase": "Default"}
+  ],
+  "Plugins": [
+    {"Name": "ProceduralMeshComponent", "Enabled": true},
+    {"Name": "DeformerGraph", "Enabled": true}
+  ]
+}

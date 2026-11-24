@@ -1,0 +1,19 @@
+{
+	"FileVersion": 3,
+	"Version": 4,
+	"VersionName": "0.1.3",
+	"FriendlyName": "HUMA Dynamic Identity Changer",
+	"Description": "Per-component HUMA identity regression and rotation-only animation, for use before WOC.",
+	"Category": "Animation",
+	"CanContainContent": true,
+	"IsBetaVersion": true,
+	"Plugins": [
+		{ "Name": "WOCDeformer", "Enabled": true },
+		{ "Name": "PythonScriptPlugin", "Enabled": true, "TargetAllowList": [ "Editor" ] },
+		{ "Name": "EditorScriptingUtilities", "Enabled": true, "TargetAllowList": [ "Editor" ] }
+	],
+	"Modules": [
+		{ "Name": "HUMADynamicIdentityChanger", "Type": "Runtime", "LoadingPhase": "Default" },
+		{ "Name": "HUMADynamicIdentityChangerEditor", "Type": "UncookedOnly", "LoadingPhase": "Default" }
+	]
+}
