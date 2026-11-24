@@ -3,6 +3,13 @@
 	"EngineAssociation": "5.8",
 	"Category": "",
 	"Description": "Boxing Hawk-Eye scene viewer/creator (HUMA runtime playback + technique annotations)",
+	"Modules": [
+		{
+			"Name": "BoxingHawkEyeSceneCreator",
+			"Type": "Runtime",
+			"LoadingPhase": "Default"
+		}
+	],
 	"Plugins": [
 		{
 			"Name": "ModelingToolsEditorMode",

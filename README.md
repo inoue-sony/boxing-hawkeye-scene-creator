@@ -14,7 +14,7 @@ Unreal Engine 5.8 プロジェクトです。
 | Unreal Engine | 5.8（Epic Games Launcher 版。既定 `C:\Program Files\Epic Games\UE_5.8`） |
 | Git LFS | `.uasset` / `.umap` / テクスチャ / ONNX / DLL は LFS 管理です。クローン前に `git lfs install` |
 | Hawk-Eye フレームデータ | リポジトリには含みません。下記「データの置き場所」を参照 |
-| Visual Studio 2022 | 任意。プラグインの Win64 バイナリは同梱していますが、C++ を変更する場合は必要です |
+| Visual Studio 2022 | C++（プロジェクト本体モジュールと HUMA 系プラグイン）のビルドに使います。ワークロード「C++ によるゲーム開発」と Unreal Engine 用コンポーネントを入れてください |
 
 ## セットアップ
 
@@ -26,8 +26,20 @@ cd boxing-hawkeye-scene-creator
 
 1. Hawk-Eye フレームデータを `Data/HawkEye/` に置く（下記）。
 2. `BoxingHawkEyeSceneCreator.uproject` をダブルクリックして開く。
-   - 「モジュールが古い/見つからない」と聞かれた場合は「はい」でリビルドします（Visual Studio が必要）。
+   - 初回は「モジュールが古い/見つからない」と聞かれるので「はい」でビルドします（Visual Studio が必要）。
+   - Visual Studio から開発する場合は下記「Visual Studio でビルドする」を参照。
 3. ツールバーの Play で再生します。
+
+### Visual Studio でビルドする
+
+1. `GenerateProjectFiles.bat` を実行する（または `.uproject` を右クリック →「Generate Visual Studio project files」）。
+   `BoxingHawkEyeSceneCreator.sln` ができます。
+2. `BoxingHawkEyeSceneCreator.sln` を Visual Studio 2022 で開く。
+3. 構成 `Development Editor` / `Win64`、スタートアッププロジェクト `BoxingHawkEyeSceneCreator` を選ぶ。
+4. ビルド（Ctrl+Shift+B）するとプロジェクト本体とプラグインがまとめてビルドされ、F5 でエディタが起動します。
+
+エディタ起動中は Live Coding が有効なため、Visual Studio からのビルドは失敗します。
+エディタを閉じてからビルドするか、エディタ上で Ctrl+Alt+F11（Live Coding）を使ってください。
 
 ### データの置き場所
 
@@ -66,6 +78,8 @@ cd boxing-hawkeye-scene-creator
 
 ```
 BoxingHawkEyeSceneCreator.uproject
+GenerateProjectFiles.bat        Visual Studio ソリューション生成
+Source/                         プロジェクト本体の C++ モジュール（Target.cs / Build.cs）
 Config/                         プロジェクト設定
 Content/
   HUMARuntime/                  起動マップ、ゲームモード、操作 UI（WBP_HUMARuntimeControls）

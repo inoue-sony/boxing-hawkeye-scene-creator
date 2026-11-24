@@ -79,7 +79,7 @@ FString UHUMALiveHawkEyeComponent::ResolveModelPath() const
 	// 1) 明示指定（相対パスはプロジェクト基準）
 	if (!IkModelFile.FilePath.IsEmpty()) { return MakeProjectAbsolute(IkModelFile.FilePath); }
 	// 2) プラグイン同梱のモデル
-	const FString Bundled = MakeProjectAbsolute(FPaths::Combine(FPaths::ProjectPluginsDir(), TEXT("HUMALiveHawkEye/Resources/ik_huma_causal_w9.onnx")));
+	const FString Bundled = MakeProjectAbsolute(TEXT("Plugins/HUMALiveHawkEye/Resources/ik_huma_causal_w9.onnx"));
 	if (FPaths::FileExists(Bundled)) { return Bundled; }
 	// 3) 旧構成（HUMA_v1.0.0 配下の npb_huma_ik）
 	return MakeProjectAbsolute(TEXT("../../../npb_huma_ik-1.0.0/npb_huma_ik/assets/ik_huma_causal_w9.onnx"));

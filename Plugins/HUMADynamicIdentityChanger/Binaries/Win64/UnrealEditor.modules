@@ -1,0 +1,8 @@
+{
+	"BuildId": "55116800",
+	"Modules": 
+	{
+		"HUMADynamicIdentityChanger": "UnrealEditor-HUMADynamicIdentityChanger.dll",
+		"HUMADynamicIdentityChangerEditor": "UnrealEditor-HUMADynamicIdentityChangerEditor.dll"
+	}
+}

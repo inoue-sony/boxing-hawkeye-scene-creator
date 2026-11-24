@@ -1,0 +1,8 @@
+{
+	"BuildId": "55116800",
+	"Modules": 
+	{
+		"HUMAClothBind": "UnrealEditor-HUMAClothBind.dll",
+		"HUMAClothBindEditor": "UnrealEditor-HUMAClothBindEditor.dll"
+	}
+}
